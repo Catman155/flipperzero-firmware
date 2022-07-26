@@ -5,6 +5,7 @@
 #include "decoder_hid26.h"
 #include "decoder_indala.h"
 #include "decoder_ioprox.h"
+#include "decoder_fdxb.h"
 #include "key_info.h"
 
 //#define RFID_GPIO_DEBUG 1
@@ -14,6 +15,7 @@ public:
     enum class Type : uint8_t {
         Normal,
         Indala,
+        FdxB,
     };
 
     RfidReader();
@@ -36,6 +38,7 @@ private:
     DecoderHID26 decoder_hid26;
     DecoderIndala decoder_indala;
     DecoderIoProx decoder_ioprox;
+    DecoderFdxB decoder_fdxb;
 
     uint32_t last_dwt_value;
 
@@ -54,6 +57,5 @@ private:
     LfrfidKeyType last_read_type;
     uint8_t last_read_data[LFRFID_KEY_SIZE];
     uint8_t last_read_count;
-
     Type type = Type::Normal;
 };

@@ -102,6 +102,39 @@ void LfRfidAppSceneReadSuccess::on_enter(LfRfidApp* app, bool /* need_restore */
             string_get_cstr(string[2]), 68, 47, 0, AlignLeft, AlignBottom, FontSecondary);
 
         break;
+    case LfrfidKeyType::KeyFdxB:
+        line_1_text->set_text("ID:", 55, 23, 0, AlignRight, AlignBottom, FontSecondary);
+        line_2l_text->set_text("C:", 55, 35, 0, AlignRight, AlignBottom, FontSecondary);
+        line_3_text->set_text("M:", 55, 47, 0, AlignRight, AlignBottom, FontSecondary);
+
+        uint64_t tag = 0;
+        memcpy(&tag, &data[0], sizeof(uint64_t));
+
+        printf("\r\n");
+        printBits(8, data);
+        uint64_t nationalId;
+        uint16_t countryId;
+        uint64_t bitmask = 0x0000003FFFFFFFFF;
+
+        nationalId = (tag & bitmask);
+        countryId = (uint16_t)(tag >> 38);
+
+        char tagStr[12+1];
+        tagStr[12] = 0;
+        for (size_t i = 12; i--; nationalId /= 10) tagStr[i] = '0' + (nationalId % 10); 
+
+        string_printf(string[0], "%s", tagStr); 
+        string_printf(string[1], "%u", countryId);
+        string_printf(string[2], "Biphase");
+
+        line_1_value->set_text(
+            string_get_cstr(string[0]), 60, 23, 0, AlignLeft, AlignBottom, FontSecondary);
+        line_2l_value->set_text(
+            string_get_cstr(string[1]), 60, 35, 0, AlignLeft, AlignBottom, FontSecondary);
+        line_3_value->set_text(
+            string_get_cstr(string[2]), 60, 47, 0, AlignLeft, AlignBottom, FontSecondary);
+
+        break;
     }
 
     app->view_controller.switch_to<ContainerVM>();
