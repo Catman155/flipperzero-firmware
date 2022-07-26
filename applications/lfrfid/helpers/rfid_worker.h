@@ -17,6 +17,8 @@ public:
     bool any_read();
     void stop_read();
 
+    void set_selected_protocol(LfrfidKeyType);
+
     enum class WriteResult : uint8_t {
         Ok,
         NotWritable,

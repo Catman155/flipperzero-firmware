@@ -51,6 +51,8 @@ void RfidReader::switch_timer_reset() {
 }
 
 void RfidReader::switch_mode() {
+    if(protocol_specified) {switch_timer_reset(); return;}
+
     switch(type) {
     case Type::Normal:
         type = Type::Indala;
@@ -79,14 +81,23 @@ RfidReader::RfidReader() {
 }
 
 void RfidReader::start() {
-    type = Type::Normal;
-
     furi_hal_rfid_pins_read();
-    furi_hal_rfid_tim_read(125000, 0.5);
+
+    if (this->protocol_specified) {
+        if (this->selected_protocol == LfrfidKeyType::KeyFdxB) {
+            type = Type::FdxB;
+            furi_hal_rfid_tim_read(134200, 0.5);
+        } else {
+            type = Type::Normal;
+            furi_hal_rfid_tim_read(125000, 0.5);
+        }
+    } else {
+        type = Type::Normal;
+        furi_hal_rfid_tim_read(125000, 0.5);
+    }
+
     furi_hal_rfid_tim_read_start();
-
     start_comparator();
-
     switch_timer_reset();
     last_read_count = 0;
 }
@@ -109,31 +120,59 @@ bool RfidReader::read(LfrfidKeyType* _type, uint8_t* data, uint8_t data_size, bo
     bool result = false;
     bool something_read = false;
 
-    // reading
-    if(decoder_em.read(data, data_size)) {
-        *_type = LfrfidKeyType::KeyEM4100;
-        something_read = true;
+    if (protocol_specified) {
+        bool result = false;
+        switch(selected_protocol) {
+            case LfrfidKeyType::KeyFdxB:
+                printf("Read FDX-B\r\n");
+                result = decoder_fdxb.read(data, data_size);
+                break;
+            case LfrfidKeyType::KeyEM4100:
+                result = decoder_em.read(data, data_size);
+                break;
+            case LfrfidKeyType::KeyI40134:
+                result = decoder_indala.read(data, data_size);
+                break;
+            case LfrfidKeyType::KeyH10301:
+                result = decoder_hid26.read(data, data_size);
+                break;
+            case LfrfidKeyType::KeyIoProxXSF:
+                result = decoder_ioprox.read(data, data_size);
+                break;
+        }
+        if (result) {
+            *_type = selected_protocol;
+            something_read = true;
+        }
+    } else {
+        // reading
+        if(decoder_em.read(data, data_size)) {
+            *_type = LfrfidKeyType::KeyEM4100;
+            something_read = true;
+        }
+
+        if(decoder_hid26.read(data, data_size)) {
+            *_type = LfrfidKeyType::KeyH10301;
+            something_read = true;
+        }
+
+        if(decoder_ioprox.read(data, data_size)) {
+            *_type = LfrfidKeyType::KeyIoProxXSF;
+            something_read = true;
+        }
+
+        if(decoder_indala.read(data, data_size)) {
+            *_type = LfrfidKeyType::KeyI40134;
+            something_read = true;
+        }
+
+        if(decoder_fdxb.read(data, data_size)) {
+            *_type = LfrfidKeyType::KeyFdxB;
+            something_read = true;
+        }
     }
 
-    if(decoder_hid26.read(data, data_size)) {
-        *_type = LfrfidKeyType::KeyH10301;
-        something_read = true;
-    }
 
-    if(decoder_ioprox.read(data, data_size)) {
-        *_type = LfrfidKeyType::KeyIoProxXSF;
-        something_read = true;
-    }
-
-    if(decoder_indala.read(data, data_size)) {
-        *_type = LfrfidKeyType::KeyI40134;
-        something_read = true;
-    }
-
-    if(decoder_fdxb.read(data, data_size)) {
-        *_type = LfrfidKeyType::KeyFdxB;
-        something_read = true;
-    }
 
     // validation
     if(something_read) {

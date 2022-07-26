@@ -21,6 +21,7 @@
 #include "scene/lfrfid_app_scene_delete_confirm.h"
 #include "scene/lfrfid_app_scene_delete_success.h"
 #include "scene/lfrfid_app_scene_rpc.h"
+#include "scene/lfrfid_app_scene_read_protocol.h"
 
 #include <toolbox/path.h>
 #include <flipper_format/flipper_format.h>
@@ -105,6 +106,7 @@ void LfRfidApp::run(void* _args) {
     } else {
         scene_controller.add_scene(SceneType::Start, new LfRfidAppSceneStart());
         scene_controller.add_scene(SceneType::Read, new LfRfidAppSceneRead());
+        scene_controller.add_scene(SceneType::ReadProtocol, new LfRfidAppSceneReadProtocol());
         scene_controller.add_scene(SceneType::RetryConfirm, new LfRfidAppSceneRetryConfirm());
         scene_controller.add_scene(SceneType::ExitConfirm, new LfRfidAppSceneExitConfirm());
         scene_controller.add_scene(SceneType::ReadSuccess, new LfRfidAppSceneReadSuccess());
