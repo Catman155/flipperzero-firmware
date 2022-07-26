@@ -33,6 +33,9 @@ void RfidReader::decode(bool polarity) {
         decoder_ioprox.process_front(polarity, period);
         decoder_indala.process_front(polarity, period);
         break;
+    case Type::FdxB:
+        decoder_fdxb.process_front(polarity, period);
+        break;
     }
 
     detect_ticks++;
@@ -54,6 +57,10 @@ void RfidReader::switch_mode() {
         furi_hal_rfid_change_read_config(62500.0f, 0.25f);
         break;
     case Type::Indala:
+        type = Type::FdxB;
+        furi_hal_rfid_change_read_config(134200.0f, 0.5f);
+        break;
+    case Type::FdxB:
         type = Type::Normal;
         furi_hal_rfid_change_read_config(125000.0f, 0.5f);
         break;
@@ -77,6 +84,7 @@ void RfidReader::start() {
     furi_hal_rfid_pins_read();
     furi_hal_rfid_tim_read(125000, 0.5);
     furi_hal_rfid_tim_read_start();
+
     start_comparator();
 
     switch_timer_reset();
@@ -85,7 +93,7 @@ void RfidReader::start() {
 
 void RfidReader::start_forced(RfidReader::Type _type) {
     start();
-    if(_type == Type::Indala) {
+    if(_type == Type::Indala || _type == Type::FdxB) {
         switch_mode();
     }
 }
@@ -119,6 +127,11 @@ bool RfidReader::read(LfrfidKeyType* _type, uint8_t* data, uint8_t data_size, bo
 
     if(decoder_indala.read(data, data_size)) {
         *_type = LfrfidKeyType::KeyI40134;
+        something_read = true;
+    }
+
+    if(decoder_fdxb.read(data, data_size)) {
+        *_type = LfrfidKeyType::KeyFdxB;
         something_read = true;
     }
 

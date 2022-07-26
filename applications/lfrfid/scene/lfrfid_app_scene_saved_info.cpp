@@ -51,6 +51,8 @@ void LfRfidAppSceneSavedInfo::on_enter(LfRfidApp* app, bool /* need_restore */) 
             data[1],
             (uint16_t)((data[2] << 8) | (data[3])));
         break;
+    case LfrfidKeyType::KeyFdxB:
+        break;
     }
     line_3->set_text(
         string_get_cstr(string_decrypted), 64, 39, 0, AlignCenter, AlignBottom, FontSecondary);

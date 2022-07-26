@@ -89,6 +89,8 @@ void RfidWorker::sq_write() {
             writer.write_ioprox(key.get_data());
             writer.stop();
             break;
+        case LfrfidKeyType::KeyFdxB:
+            break;
         }
     }
 }
@@ -102,6 +104,9 @@ void RfidWorker::sq_write_start_validate() {
         break;
     case LfrfidKeyType::KeyI40134:
         reader.start_forced(RfidReader::Type::Indala);
+        break;
+    case LfrfidKeyType::KeyFdxB:
+        reader.start_forced(RfidReader::Type::FdxB);
         break;
     }
 }
