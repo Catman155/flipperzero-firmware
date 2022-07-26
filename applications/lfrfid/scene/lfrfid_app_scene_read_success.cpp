@@ -110,8 +110,6 @@ void LfRfidAppSceneReadSuccess::on_enter(LfRfidApp* app, bool /* need_restore */
         uint64_t tag = 0;
         memcpy(&tag, &data[0], sizeof(uint64_t));
 
-        printf("\r\n");
-        printBits(8, data);
         uint64_t nationalId;
         uint16_t countryId;
         uint64_t bitmask = 0x0000003FFFFFFFFF;
