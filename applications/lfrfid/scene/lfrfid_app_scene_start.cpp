@@ -2,6 +2,7 @@
 
 typedef enum {
     SubmenuRead,
+    SubmenuReadProtocol,
     SubmenuSaved,
     SubmenuAddManually,
 } SubmenuIndex;
@@ -10,6 +11,7 @@ void LfRfidAppSceneStart::on_enter(LfRfidApp* app, bool need_restore) {
     auto submenu = app->view_controller.get<SubmenuVM>();
 
     submenu->add_item("Read", SubmenuRead, submenu_callback, app);
+    submenu->add_item("Read Protocol", SubmenuReadProtocol, submenu_callback, app);
     submenu->add_item("Saved", SubmenuSaved, submenu_callback, app);
     submenu->add_item("Add Manually", SubmenuAddManually, submenu_callback, app);
 
@@ -27,10 +29,15 @@ bool LfRfidAppSceneStart::on_event(LfRfidApp* app, LfRfidApp::Event* event) {
     bool consumed = false;
 
     if(event->type == LfRfidApp::EventType::MenuSelected) {
+        app->protocol_selected = false;
         submenu_item_selected = event->payload.menu_index;
+
         switch(event->payload.menu_index) {
         case SubmenuRead:
             app->scene_controller.switch_to_next_scene(LfRfidApp::SceneType::Read);
+            break;
+        case SubmenuReadProtocol:
+            app->scene_controller.switch_to_next_scene(LfRfidApp::SceneType::ReadProtocol);
             break;
         case SubmenuSaved:
             app->scene_controller.switch_to_next_scene(LfRfidApp::SceneType::SelectKey);
