@@ -86,7 +86,7 @@ void RfidReader::start() {
     if (this->protocol_specified) {
         if (this->selected_protocol == LfrfidKeyType::KeyFdxB) {
             type = Type::FdxB;
-            furi_hal_rfid_tim_read(134200, 0.5);
+            furi_hal_rfid_tim_read(134200, 0.535);
         } else {
             type = Type::Normal;
             furi_hal_rfid_tim_read(125000, 0.5);
