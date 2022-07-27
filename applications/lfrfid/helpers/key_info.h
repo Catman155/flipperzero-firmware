@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-static const uint8_t LFRFID_KEY_SIZE = 8;
+static const uint8_t LFRFID_KEY_SIZE = 16;
 static const uint8_t LFRFID_KEY_NAME_SIZE = 22;
 
 enum class LfrfidKeyType : uint8_t {
