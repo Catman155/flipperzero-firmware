@@ -38,6 +38,7 @@ public:
     enum class SceneType : uint8_t {
         GENERIC_SCENE_ENUM_VALUES,
         Read,
+        ReadProtocol,
         ReadSuccess,
         RetryConfirm,
         ExitConfirm,
@@ -61,6 +62,7 @@ public:
     public:
         union {
             int32_t menu_index;
+            LfrfidKeyType selected_key_type;
         } payload;
 
         EventType type;
@@ -84,6 +86,9 @@ public:
     string_t file_path;
 
     RpcAppSystem* rpc_ctx;
+
+    LfrfidKeyType selected_key_type;
+    bool protocol_selected = false;
 
     void run(void* args);
 

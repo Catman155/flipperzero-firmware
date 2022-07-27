@@ -12,6 +12,11 @@ enum class LfrfidKeyType : uint8_t {
     KeyFdxB,
 };
 
+const LfrfidKeyType AllKeyTypes[] = {
+    LfrfidKeyType::KeyEM4100, LfrfidKeyType::KeyH10301, LfrfidKeyType::KeyI40134,
+    LfrfidKeyType::KeyIoProxXSF, LfrfidKeyType::KeyFdxB
+};
+
 const char* lfrfid_key_get_type_string(LfrfidKeyType type);
 const char* lfrfid_key_get_manufacturer_string(LfrfidKeyType type);
 bool lfrfid_key_get_string_type(const char* string, LfrfidKeyType* type);

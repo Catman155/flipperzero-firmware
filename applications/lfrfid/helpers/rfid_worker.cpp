@@ -6,6 +6,11 @@ RfidWorker::RfidWorker() {
 RfidWorker::~RfidWorker() {
 }
 
+void RfidWorker::set_selected_protocol(LfrfidKeyType keyType) {
+    reader.selected_protocol = keyType;
+    reader.protocol_specified = true;
+}
+
 void RfidWorker::start_read() {
     reader.start();
 }

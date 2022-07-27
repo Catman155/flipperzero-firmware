@@ -27,6 +27,9 @@ public:
     bool detect();
     bool any_read();
 
+
+    LfrfidKeyType selected_protocol;
+    bool protocol_specified = false;
 private:
     friend struct RfidReaderAccessor;
 
