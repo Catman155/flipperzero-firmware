@@ -277,7 +277,7 @@ uint8_t ProtocolFdxB::get_encoded_data_size() {
 }
 
 uint8_t ProtocolFdxB::get_decoded_data_size() {
-    return 11;
+    return 8;
 }
 
 void ProtocolFdxB::encode(
@@ -329,8 +329,6 @@ void ProtocolFdxB::decode(
     // 10 bit of country code
     uint16_t country_code = bit_lib_get_bits_16(data, 38, 10) << 6;
     bit_lib_reverse_bits((uint8_t*)&country_code, 0, 16);
-    decoded_data[0]=country_code & 0xff;
-    decoded_data[1]=(country_code >> 8);
 
     uint64_t national_code = 0;
     for (uint8_t i = 38; i > 0; i--) {
