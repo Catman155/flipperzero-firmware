@@ -12,11 +12,18 @@
 #define FLAG_BLOCK (1 << 1)
 #define FLAG_RUDI (1 << 2)
 
+typedef struct {
+    uint16_t code;
+    const char *desc;
+} fdxbCountryMapping_t;
 
 class ProtocolFdxB : public ProtocolGeneric {
 public:
     uint8_t get_encoded_data_size() final;
     uint8_t get_decoded_data_size() final;
+
+    static const fdxbCountryMapping_t fdxbCountryMapping[];
+    static const char* mapFDBX(uint16_t countryCode);
 
     void encode(
         const uint8_t* decoded_data,

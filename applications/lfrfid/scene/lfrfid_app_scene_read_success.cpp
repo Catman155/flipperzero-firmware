@@ -2,6 +2,7 @@
 #include "../view/elements/button_element.h"
 #include "../view/elements/icon_element.h"
 #include "../view/elements/string_element.h"
+#include "../helpers/protocols/protocol_fdxb.h"
 
 void LfRfidAppSceneReadSuccess::on_enter(LfRfidApp* app, bool /* need_restore */) {
     string_init(string[0]);
@@ -124,11 +125,14 @@ void LfRfidAppSceneReadSuccess::on_enter(LfRfidApp* app, bool /* need_restore */
         string_printf(string[0], "%s", tagStr); 
         string_printf(string[1], "%u", countryId);
         string_printf(string[2], "Biphase");
+        string_printf(string[3], "%s", ProtocolFdxB::mapFDBX(countryId));
 
         line_1_value->set_text(
             string_get_cstr(string[0]), 60, 23, 0, AlignLeft, AlignBottom, FontSecondary);
         line_2l_value->set_text(
             string_get_cstr(string[1]), 60, 35, 0, AlignLeft, AlignBottom, FontSecondary);
+        line_2r_value->set_text(
+            string_get_cstr(string[3]), 98, 35, 0, AlignLeft, AlignBottom, FontSecondary);
         line_3_value->set_text(
             string_get_cstr(string[2]), 60, 47, 0, AlignLeft, AlignBottom, FontSecondary);
 
